@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const path = require('path');
 
 const app = express();
@@ -84,7 +84,7 @@ function startNewRound() {
   const q = generateQuestion(difficulty);
 
   currentRound = {
-    id: uuidv4(),
+    id: crypto.randomUUID(),
     questionText: q.text,
     answer: q.answer,
     difficulty,
