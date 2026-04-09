@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Arena — Competitive Math Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="screen">
+    <div class="login-card">
+      <h1>⚡ Math Arena</h1>
+      <p class="subtitle">Compete in real-time. First correct answer wins.</p>
+      <input type="text" id="name-input" placeholder="Enter your display name" maxlength="20" autofocus>
+      <button id="join-btn">Join Game</button>
+      <p id="login-error" class="login-error hidden"></p>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="screen hidden">
+    <header>
+      <div class="header-left">
+        <h1>⚡ Math Arena</h1>
+        <span id="online-count" class="badge">0 online</span>
+      </div>
+      <div class="header-right">
+        <span id="latency-display" class="badge latency">-- ms</span>
+        <span id="player-name" class="badge player"></span>
+      </div>
+    </header>
+
+    <main>
+      <div id="question-card" class="card">
+        <div class="card-header">
+          <span id="round-label">Round 1</span>
+          <span id="difficulty-label" class="difficulty">Difficulty ★</span>
+        </div>
+        <div id="question-text" class="question">Loading...</div>
+        <form id="answer-form">
+          <input type="number" id="answer-input" placeholder="Your answer" step="any" autocomplete="off">
+          <button type="submit" id="submit-btn">Submit</button>
+        </form>
+        <div id="feedback" class="feedback"></div>
+      </div>
+
+      <!-- Winner Banner (shown between rounds) -->
+      <div id="winner-banner" class="banner hidden">
+        <div class="banner-content">
+          <span class="trophy">🏆</span>
+          <span id="winner-text"></span>
+        </div>
+      </div>
+
+      <!-- High Scores -->
+      <div id="scores-card" class="card">
+        <h2>🏅 Leaderboard</h2>
+        <table id="scores-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>Wins</th>
+              <th>Streak</th>
+              <th>Best Streak</th>
+            </tr>
+          </thead>
+          <tbody id="scores-body"></tbody>
+        </table>
+        <p id="no-scores" class="muted">No scores yet. Be the first to win!</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
