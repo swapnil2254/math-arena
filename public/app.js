@@ -21,10 +21,10 @@ const noScores      = document.getElementById('no-scores');
 // ── State ───────────────────────────────────────────────────────────────────
 let socket = null;
 let currentRoundId = null;
-let userId = localStorage.getItem('mathArenaUserId');
+let userId = sessionStorage.getItem('mathArenaUserId');
 if (!userId) {
   userId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
-  localStorage.setItem('mathArenaUserId', userId);
+  sessionStorage.setItem('mathArenaUserId', userId);
 }
 
 const loginError = document.getElementById('login-error');
@@ -98,6 +98,10 @@ function connectSocket(displayName) {
     clearFeedback();
     answerInput.value = '';
     answerInput.focus();
+  });
+
+  socket.on('scores-update', (data) => {
+    updateScores(data.highScores);
   });
 
   socket.on('answer-result', (data) => {

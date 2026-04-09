@@ -140,11 +140,14 @@ io.on('connection', (socket) => {
       roundNumber,
       winner: currentRound?.winner,
       highScores: getTopScores(),
-      onlineCount: Object.keys(connectedUsers).length,
+      onlineCount: getUniqueOnlineCount(),
       serverTime: Date.now(),
     });
 
     broadcastOnlineCount();
+
+    // Notify all existing users of updated leaderboard
+    socket.broadcast.emit('scores-update', { highScores: getTopScores() });
   });
 
   // CONCURRENCY: roundLocked acts as a mutex. The first correct answer sets
@@ -219,14 +222,24 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    const user = connectedUsers[socket.id];
+    if (user) {
+      delete highScores[user.id];
+    }
     delete connectedUsers[socket.id];
     broadcastOnlineCount();
+    io.emit('scores-update', { highScores: getTopScores() });
     console.log(`Disconnected: ${socket.id}`);
   });
 });
 
+function getUniqueOnlineCount() {
+  const uniqueIds = new Set(Object.values(connectedUsers).map(u => u.id));
+  return uniqueIds.size;
+}
+
 function broadcastOnlineCount() {
-  io.emit('online-count', { count: Object.keys(connectedUsers).length });
+  io.emit('online-count', { count: getUniqueOnlineCount() });
 }
 
 function getTopScores() {
